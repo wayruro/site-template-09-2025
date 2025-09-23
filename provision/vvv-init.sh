@@ -252,6 +252,10 @@ function update_wp() {
     echo " * Updating WordPress '${WP_VERSION}'"
     noroot wp core update --version="${WP_VERSION}"
   fi
+  
+  # Update the admin user's display name, nickname, email, and URL on existing sites
+  noroot wp user update 1 --user_email="ajiseco@gmail.com" --user_url="https://renzo.io"
+  
 }
 
 # @description Setup a wp-cli.yml config for easier SSH, replacing any existing WP CLI config.
