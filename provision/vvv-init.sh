@@ -214,9 +214,9 @@ function maybe_import_test_content() {
 
 function install_wp() {
   echo " * Installing WordPress"
-  ADMIN_USER=$(get_config_value 'admin_user' "admin")
+  ADMIN_USER=$(get_config_value 'admin_user' "vcadmin")
   ADMIN_PASSWORD=$(get_config_value 'admin_password' "password")
-  ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
+  ADMIN_EMAIL=$(get_config_value 'admin_email' "ajiseco@gmail.com")
 
   echo " * Installing using wp core install --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
   noroot wp core install --url="${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
