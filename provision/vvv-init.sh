@@ -319,7 +319,16 @@ noroot wp option update gmt_offset ''
 noroot wp option update timezone_string "America/New_York"
 
 # Set the permalink structure to /%postname%/ and flush rewrite rules
-noroot wp rewrite permalink_structure "/%postname%/" --hard
+noroot wp rewrite structure "/%postname%/" --hard
+
+# Set the homepage to show a static page
+noroot wp option update show_on_front "page"
+
+# Set the front page to the post with an ID of 2 (usually the default 'Sample Page')
+noroot wp option update page_on_front 2
+
+# Rename the 'Sample Page' (ID 2) to 'Home'
+noroot wp post update 2 --post_title="Home"
 
 echo "!!!! DEBUG: CUSTOM COMMANDS HAVE FINISHED !!!!"
 
