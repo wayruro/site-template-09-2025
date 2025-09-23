@@ -222,18 +222,7 @@ function install_wp() {
   noroot wp core install --url="https://${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
   echo " * WordPress was installed, with the username '${ADMIN_USER}', and the password '${ADMIN_PASSWORD}' at '${ADMIN_EMAIL}'"
 
-  echo " * Setting timezone and permalinks..."
-  
-  # First, clear the GMT offset to ensure timezone_string takes precedence.
-  noroot wp option update gmt_offset ''
-  
-  # Now, set the timezone string.
-  noroot wp option update timezone_string "America/New_York"
-  
-  # Set the permalink structure to /%postname%/ and flush rewrite rules
-  noroot wp rewrite structure "/%postname%/" --hard
-  
-  echo " * Custom timezone and permalinks have been set."
+
 
   if [ "${WP_TYPE}" = "subdomain" ]; then
     echo " * Running Multisite install using wp core multisite-install --subdomains --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
@@ -317,6 +306,21 @@ else
     update_wp
   fi
 fi
+
+
+  echo " * Setting timezone and permalinks..."
+  
+  # First, clear the GMT offset to ensure timezone_string takes precedence.
+  noroot wp option update gmt_offset ''
+  
+  # Now, set the timezone string.
+  noroot wp option update timezone_string "America/New_York"
+  
+  # Set the permalink structure to /%postname%/ and flush rewrite rules
+  noroot wp rewrite structure "/%postname%/" --hard
+  
+  echo " * Custom timezone and permalinks have been set."
+
 
 copy_nginx_configs
 setup_wp_config_constants
