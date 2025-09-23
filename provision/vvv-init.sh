@@ -325,6 +325,9 @@ noroot wp option update timezone_string "America/New_York"
 # Set the administration email address
 noroot wp option update admin_email "ajiseco@gmail.com"
 
+# Bypass the confirmation email by deleting the 'pending change' option
+noroot wp option delete new_admin_email
+
 # Set the permalink structure to /%postname%/ and flush rewrite rules
 noroot wp rewrite structure "/%postname%/" --hard
 
