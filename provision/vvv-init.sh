@@ -222,18 +222,18 @@ function install_wp() {
   noroot wp core install --url="${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
   echo " * WordPress was installed, with the username '${ADMIN_USER}', and the password '${ADMIN_PASSWORD}' at '${ADMIN_EMAIL}'"
 
- # ---> START: ADD YOUR CUSTOM COMMANDS HERE <---
-
   echo " * Setting timezone and permalinks..."
-  # Set the timezone to Eastern Time. Replace with your desired timezone.
+  
+  # First, clear the GMT offset to ensure timezone_string takes precedence.
+  noroot wp option update gmt_offset ''
+  
+  # Now, set the timezone string.
   noroot wp option update timezone_string "America/New_York"
-
+  
   # Set the permalink structure to /%postname%/ and flush rewrite rules
   noroot wp rewrite structure "/%postname%/" --hard
-
+  
   echo " * Custom timezone and permalinks have been set."
-
-  # ---> END: CUSTOM COMMANDS <---
 
   if [ "${WP_TYPE}" = "subdomain" ]; then
     echo " * Running Multisite install using wp core multisite-install --subdomains --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
