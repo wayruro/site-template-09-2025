@@ -308,18 +308,20 @@ else
 fi
 
 
-  echo " * Setting timezone and permalinks..."
-  
-  # First, clear the GMT offset to ensure timezone_string takes precedence.
-  noroot wp option update gmt_offset ''
-  
-  # Now, set the timezone string.
-  noroot wp option update timezone_string "America/New_York"
-  
-  # Set the permalink structure to /%postname%/ and flush rewrite rules
-  noroot wp rewrite structure "/%postname%/" --hard
-  
-  echo " * Custom timezone and permalinks have been set."
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "!!!! DEBUG: EXECUTING CUSTOM COMMANDS BLOCK V3 !!!!"
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+# First, clear the GMT offset to ensure timezone_string takes precedence.
+noroot wp option update gmt_offset ''
+
+# Now, set the timezone string.
+noroot wp option update timezone_string "America/New_York"
+
+# Set the permalink structure to /%postname%/ and flush rewrite rules
+noroot wp rewrite permalink_structure "/%postname%/" --hard
+
+echo "!!!! DEBUG: CUSTOM COMMANDS HAVE FINISHED !!!!"
 
 
 copy_nginx_configs
