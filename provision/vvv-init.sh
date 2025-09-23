@@ -322,6 +322,9 @@ noroot wp option update gmt_offset ''
 # Now, set the timezone string.
 noroot wp option update timezone_string "America/New_York"
 
+# Set the administration email address
+noroot wp option update admin_email "ajiseco@gmail.com"
+
 # Set the permalink structure to /%postname%/ and flush rewrite rules
 noroot wp rewrite structure "/%postname%/" --hard
 
