@@ -330,6 +330,15 @@ noroot wp option update page_on_front 2
 # Rename the 'Sample Page' (ID 2) to 'Home'
 noroot wp post update 2 --post_title="Home"
 
+# Rename the 'Hello world!' post (ID 1) to 'Hey Monkey!'
+noroot wp post update 1 --post_title="Hey Monkey!"
+
+# Set the blog description (tagline)
+noroot wp option update blogdescription "Plugin Development Sandbox"
+
+# Set the website URL for the admin user (ID 1)
+noroot wp user update 1 --user_url="https://renzo.io"
+
 echo "!!!! DEBUG: CUSTOM COMMANDS HAVE FINISHED !!!!"
 
 
