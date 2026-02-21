@@ -218,9 +218,8 @@ function install_wp() {
   ADMIN_PASSWORD=$(get_config_value 'admin_password' "password")
   ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
 
-  echo " * Installing using wp core install --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
   noroot wp core install --url="https://${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
-  echo " * WordPress was installed, with the username '${ADMIN_USER}', and the password '${ADMIN_PASSWORD}' at '${ADMIN_EMAIL}'"
+  echo " * WordPress was installed, with the username '${ADMIN_USER}' at '${ADMIN_EMAIL}'"
 
 
 
@@ -314,30 +313,35 @@ else
 fi
 
 
-# ---- Custom site defaults (configurable via config.yml custom: block) ----
+# ---- Custom site defaults (all configurable via config.yml custom: block) ----
 SITE_ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
 SITE_ADMIN_URL=$(get_config_value 'admin_url' "")
-SITE_TIMEZONE=$(get_config_value 'timezone' "America/New_York")
-SITE_TAGLINE=$(get_config_value 'tagline' "Plugin Development Sandbox")
+SITE_TIMEZONE=$(get_config_value 'timezone' "UTC")
+SITE_TAGLINE=$(get_config_value 'tagline' "")
+SITE_PERMALINK=$(get_config_value 'permalink_structure' "/%postname%/")
+SITE_FRONT_PAGE=$(get_config_value 'show_on_front' "page")
+SITE_FRONT_PAGE_ID=$(get_config_value 'page_on_front' "2")
+SITE_HOME_TITLE=$(get_config_value 'home_title' "Home")
+SITE_POST_TITLE=$(get_config_value 'post_title' "Hello world!")
 
-# Clear GMT offset so timezone_string takes precedence
+# Timezone
 noroot wp option update gmt_offset ''
 noroot wp option update timezone_string "${SITE_TIMEZONE}"
 
-# Set admin email and bypass confirmation
+# Admin email (bypass confirmation)
 noroot wp option update admin_email "${SITE_ADMIN_EMAIL}"
 noroot wp option delete new_admin_email
 
 # Permalinks
-noroot wp rewrite structure "/%postname%/" --hard
+noroot wp rewrite structure "${SITE_PERMALINK}" --hard
 
 # Static front page
-noroot wp option update show_on_front "page"
-noroot wp option update page_on_front 2
+noroot wp option update show_on_front "${SITE_FRONT_PAGE}"
+noroot wp option update page_on_front "${SITE_FRONT_PAGE_ID}"
 
 # Rename defaults
-noroot wp post update 2 --post_title="Home"
-noroot wp post update 1 --post_title="Hey Monkey!"
+noroot wp post update 2 --post_title="${SITE_HOME_TITLE}"
+noroot wp post update 1 --post_title="${SITE_POST_TITLE}"
 
 # Tagline
 noroot wp option update blogdescription "${SITE_TAGLINE}"
