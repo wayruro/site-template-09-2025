@@ -214,9 +214,9 @@ function maybe_import_test_content() {
 
 function install_wp() {
   echo " * Installing WordPress"
-  ADMIN_USER=$(get_config_value 'admin_user' "vcadmin")
+  ADMIN_USER=$(get_config_value 'admin_user' "admin")
   ADMIN_PASSWORD=$(get_config_value 'admin_password' "password")
-  ADMIN_EMAIL=$(get_config_value 'admin_email' "ajiseco@gmail.com")
+  ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
 
   echo " * Installing using wp core install --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
   noroot wp core install --url="https://${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
@@ -253,8 +253,10 @@ function update_wp() {
     noroot wp core update --version="${WP_VERSION}"
   fi
   
-  # Update the admin user's display name, nickname, email, and URL on existing sites
-  noroot wp user update 1 --user_email="ajiseco@gmail.com" --user_url="https://renzo.io"
+  # Update the admin user's email and URL on existing sites (reads from config.yml)
+  ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
+  ADMIN_URL=$(get_config_value 'admin_url' "")
+  noroot wp user update 1 --user_email="${ADMIN_EMAIL}" --user_url="${ADMIN_URL}"
   
 }
 
@@ -312,44 +314,38 @@ else
 fi
 
 
-echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-echo "!!!! DEBUG: EXECUTING CUSTOM COMMANDS BLOCK V3 !!!!"
-echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+# ---- Custom site defaults (configurable via config.yml custom: block) ----
+SITE_ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
+SITE_ADMIN_URL=$(get_config_value 'admin_url' "")
+SITE_TIMEZONE=$(get_config_value 'timezone' "America/New_York")
+SITE_TAGLINE=$(get_config_value 'tagline' "Plugin Development Sandbox")
 
-# First, clear the GMT offset to ensure timezone_string takes precedence.
+# Clear GMT offset so timezone_string takes precedence
 noroot wp option update gmt_offset ''
+noroot wp option update timezone_string "${SITE_TIMEZONE}"
 
-# Now, set the timezone string.
-noroot wp option update timezone_string "America/New_York"
-
-# Set the administration email address
-noroot wp option update admin_email "ajiseco@gmail.com"
-
-# Bypass the confirmation email by deleting the 'pending change' option
+# Set admin email and bypass confirmation
+noroot wp option update admin_email "${SITE_ADMIN_EMAIL}"
 noroot wp option delete new_admin_email
 
-# Set the permalink structure to /%postname%/ and flush rewrite rules
+# Permalinks
 noroot wp rewrite structure "/%postname%/" --hard
 
-# Set the homepage to show a static page
+# Static front page
 noroot wp option update show_on_front "page"
-
-# Set the front page to the post with an ID of 2 (usually the default 'Sample Page')
 noroot wp option update page_on_front 2
 
-# Rename the 'Sample Page' (ID 2) to 'Home'
+# Rename defaults
 noroot wp post update 2 --post_title="Home"
-
-# Rename the 'Hello world!' post (ID 1) to 'Hey Monkey!'
 noroot wp post update 1 --post_title="Hey Monkey!"
 
-# Set the blog description (tagline)
-noroot wp option update blogdescription "Plugin Development Sandbox"
+# Tagline
+noroot wp option update blogdescription "${SITE_TAGLINE}"
 
-# Set the website URL for the admin user (ID 1)
-noroot wp user update 1 --user_url="https://renzo.io"
-
-echo "!!!! DEBUG: CUSTOM COMMANDS HAVE FINISHED !!!!"
+# Admin user URL
+if [ ! -z "${SITE_ADMIN_URL}" ]; then
+  noroot wp user update 1 --user_url="${SITE_ADMIN_URL}"
+fi
 
 
 copy_nginx_configs
