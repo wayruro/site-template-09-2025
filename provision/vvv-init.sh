@@ -314,6 +314,17 @@ else
 fi
 
 
+# ---- DEBUG: verify get_config_value reads from config.yml ----
+echo " * DEBUG: VVV_SITE_NAME=${VVV_SITE_NAME}"
+echo " * DEBUG: VVV_CONFIG=${VVV_CONFIG}"
+echo " * DEBUG: SITE_ESCAPED=${SITE_ESCAPED}"
+echo " * DEBUG: type get_config_value=$(type -t get_config_value)"
+echo " * DEBUG: get_config_value('admin_email')=$(get_config_value 'admin_email' 'DEFAULT_FALLBACK')"
+echo " * DEBUG: get_config_value('admin_user')=$(get_config_value 'admin_user' 'DEFAULT_FALLBACK')"
+echo " * DEBUG: get_config_value('admin_url')=$(get_config_value 'admin_url' 'DEFAULT_FALLBACK')"
+echo " * DEBUG: get_config_value('install_plugins')=$(get_config_value 'install_plugins' 'DEFAULT_FALLBACK')"
+echo " * DEBUG: raw shyaml test=$(shyaml -q get-value "sites.${SITE_ESCAPED}.custom.admin_email" < "${VVV_CONFIG}" 2>&1)"
+
 # ---- Custom site defaults (configurable via config.yml custom: block) ----
 SITE_ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
 SITE_ADMIN_URL=$(get_config_value 'admin_url' "")
