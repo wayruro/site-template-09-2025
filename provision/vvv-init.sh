@@ -314,20 +314,6 @@ else
 fi
 
 
-# ---- DEBUG: write to file since VVV may swallow stdout ----
-{
-  echo "VVV_SITE_NAME=${VVV_SITE_NAME}"
-  echo "VVV_CONFIG=${VVV_CONFIG}"
-  echo "SITE_ESCAPED=${SITE_ESCAPED}"
-  echo "type_get_config_value=$(type -t get_config_value 2>&1)"
-  echo "admin_email=$(get_config_value 'admin_email' 'DEFAULT_FALLBACK')"
-  echo "admin_user=$(get_config_value 'admin_user' 'DEFAULT_FALLBACK')"
-  echo "admin_url=$(get_config_value 'admin_url' 'DEFAULT_FALLBACK')"
-  echo "install_plugins=$(get_config_value 'install_plugins' 'DEFAULT_FALLBACK')"
-  echo "raw_shyaml=$(shyaml -q get-value "sites.${SITE_ESCAPED:-malulo}.custom.admin_email" < "${VVV_CONFIG}" 2>&1)"
-  echo "all_custom=$(shyaml -q get-value "sites.${SITE_ESCAPED:-malulo}.custom" < "${VVV_CONFIG}" 2>&1)"
-} > /tmp/vvv-debug-malulo.log 2>&1
-
 # ---- Custom site defaults (configurable via config.yml custom: block) ----
 SITE_ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
 SITE_ADMIN_URL=$(get_config_value 'admin_url' "")
